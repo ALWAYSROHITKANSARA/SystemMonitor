@@ -1,4 +1,13 @@
 #include "processor.h"
+#include "linux_parser.h"
+#include <string> 
 
-// TODO: Return the aggregate CPU utilization
-float Processor::Utilization() { return 0.0; }
+using std::stof;
+
+// TODO: Return the aggregate CPU utilization  :: Done
+float Processor::Utilization() { 
+  float totalTime = LinuxParser::Jiffies();
+  float activeTime = LinuxParser::ActiveJiffies() ;
+  float util = std::stof(activeTime/totalTime);
+  return util;
+ }
