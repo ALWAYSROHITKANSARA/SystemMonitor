@@ -39,7 +39,7 @@ std::string System::Kernel() {
 float System::MemoryUtilization() { return LinuxParser::MemoryUtilization();; }
 
 // TODO: Return the operating system name  :: Done
-std::string System::OperatingSystem() { return return LinuxParser::OperatingSystem(); }
+std::string System::OperatingSystem() { return LinuxParser::OperatingSystem(); }
 
 // TODO: Return the number of processes actively running on the system  :: Done
 int System::RunningProcesses() { return LinuxParser::RunningProcesses();; }

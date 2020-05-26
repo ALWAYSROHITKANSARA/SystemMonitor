@@ -12,6 +12,18 @@ using std::to_string;
 using std::vector;
 using std::stof;
 
+
+  Process::Process(int pid) {
+  pid_ = pid;
+  user_ = LinuxParser::User(pid_);
+  command_ = LinuxParser::Command(pid_);
+  cpuUtilization_ = Process::CpuUtilization();
+  ram_=   LinuxParser::Ram(pid_);
+  upTime_= LinuxParser::UpTime(); 
+  LinuxParser::UpTime(pid_);
+}
+
+
 // TODO: Return this process's ID  :: Done
 int Process::Pid() { 
     //The process identifier (PID) is accessible from the /proc directory. 
@@ -24,7 +36,7 @@ float Process::CpuUtilization() {
     vector<string>vect;
     float totalTime;
 
-    std::ifstream filestream(kProcDirectory+to_string(pid_)+kStatDirectory);
+    std::ifstream filestream(LinuxParser::kProcDirectory+to_string(pid_)+LinuxParser::kStatFilename);
     if(filestream.is_open()){
         std::getline(filestream,line);
         std::istringstream linestream(line);
@@ -33,9 +45,9 @@ float Process::CpuUtilization() {
         }
     }
 
-    totalTime = std::stof(vect[15]+std::stof(vect[16])+std::stof(vect[17])+std::stof(vect[18]));
+    totalTime = std::stof(vect[15])+std::stof(vect[16])+std::stof(vect[17])+std::stof(vect[18]);
     totalTime /= sysconf(_SC_CLK_TCK);
-    return totalTime/LinuxParser::Uptime(pid_);
+    return totalTime/LinuxParser::UpTime(pid_);
  }
 
 // TODO: Return the command that generated this process :: Done

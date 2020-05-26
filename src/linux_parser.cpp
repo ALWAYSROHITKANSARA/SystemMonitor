@@ -231,10 +231,11 @@ int LinuxParser::RunningProcesses() {
 string LinuxParser::Command(int pid) { 
   //Linux stores the command used to launch the function in the /proc/[pid]/cmdline file.
   //reading command from file
-  string command,line;
-  std::ifstream filestream(kProcDirectory + to_string(pid) + kCmdlineFilename);
+  string command;
+  std::ifstream filestream(LinuxParser::kProcDirectory + to_string(pid) + LinuxParser::kCmdlineFilename);
   if (filestream.is_open()){
-    std::getline(filestream, line);
+    std::getline(filestream, command);
+    std::istringstream linestream(command);
     return command;
   }
   return command;
