@@ -45,7 +45,7 @@ float Process::CpuUtilization() {
         }
     }
 
-    totalTime = std::stof(vect[15])+std::stof(vect[16])+std::stof(vect[17])+std::stof(vect[18]);
+    totalTime = std::stof(vect[14])+std::stof(vect[15])+std::stof(vect[16])+std::stof(vect[17])+std::stof(vect[22]);
     totalTime /= sysconf(_SC_CLK_TCK);
     return totalTime/LinuxParser::UpTime(pid_);
  }
