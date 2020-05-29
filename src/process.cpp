@@ -32,22 +32,11 @@ int Process::Pid() {
 
 // TODO: Return this process's CPU utilization :: Done
 float Process::CpuUtilization() { 
-    string line,value;
-    vector<string>vect;
-    float totalTime;
-
-    std::ifstream filestream(LinuxParser::kProcDirectory+to_string(pid_)+LinuxParser::kStatFilename);
-    if(filestream.is_open()){
-        std::getline(filestream,line);
-        std::istringstream linestream(line);
-        while(linestream>>value){
-            vect.push_back(value);
-        }
-    }
-
-    totalTime = std::stof(vect[14])+std::stof(vect[15])+std::stof(vect[16])+std::stof(vect[17])+std::stof(vect[22]);
-    totalTime /= sysconf(_SC_CLK_TCK);
-    return totalTime/LinuxParser::UpTime(pid_);
+  float totaltime = LinuxParser::ActiveJiffies(Pid());  
+  float uptime = LinuxParser::UpTime();                
+  float secondsactive = uptime - (Process::UpTime() / sysconf(_SC_CLK_TCK));  
+  float cpu_usage = (totaltime / sysconf(_SC_CLK_TCK)) / secondsactive;   
+  return cpu_usage;
  }
 
 // TODO: Return the command that generated this process :: Done
