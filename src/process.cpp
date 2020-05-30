@@ -32,11 +32,27 @@ int Process::Pid() {
 
 // TODO: Return this process's CPU utilization :: Done
 float Process::CpuUtilization() { 
-  float totaltime = LinuxParser::ActiveJiffies(Pid());  
-  float uptime = LinuxParser::UpTime();                
-  float secondsactive = uptime - (Process::UpTime() / sysconf(_SC_CLK_TCK));  
-  float cpu_usage = (totaltime / sysconf(_SC_CLK_TCK)) / secondsactive;   
-  return cpu_usage;
+string line,value;
+vector<string> data;
+  
+int Hertz = sysconf(_SC_CLK_TCK);
+    std::ifstream filestream(LinuxParser::kProcDirectory+to_string(pid_)+LinuxParser::kStatFilename);
+    if(filestream.is_open()){
+        std::getline(filestream,line);
+        std::istringstream linestream(line) ; 
+        for (int i = 0; i < 22 ; i++)
+        {
+            linestream >> value ; 
+            data.push_back(value);
+
+        }
+    }
+//calculations 
+int totalTime = std::stoi(data[13])+std::stoi(data[14])+std::stoi(data[15])+std::stoi(data[16]);
+int seconds = LinuxParser::UpTime()-(std::stoi(data[21])/Hertz);
+float cpuU = (((float)totalTime/(float)Hertz)/(float)seconds);
+
+return cpuU ;
  }
 
 // TODO: Return the command that generated this process :: Done
